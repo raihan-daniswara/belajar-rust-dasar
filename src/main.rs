@@ -1,7 +1,7 @@
 fn main() {
     println!("Hello, world!");
 
-    println!("Hello, Raihan!");
+    println!("");
 }
 
 #[test]
@@ -333,4 +333,455 @@ fn constant() {
     const MAXIMUM: i16 = 1000;
     println!("Minimum = {}", MINIMUM);
     println!("Maximum = {}", MAXIMUM);
+}
+
+const SCOPE1: i8 = 1;
+
+#[test]
+fn variable_scope() {
+    println!("scope 1 = {}", SCOPE1);
+    let scope2 = 2;
+    {
+        println!("scope 2 = {}", scope2);
+        let scope3 = 3;
+        println!("scope = {}, {}, {}", SCOPE1, scope2, scope3)
+    }
+
+    // akan error karena tidak dapat mengambil variabel scope 3 yang diluar dari jangkauan scope nya
+    // println!("scope 3 = {}", scope3)
+}
+
+#[test]
+fn stack_heap() {
+    function_a();
+    function_b();
+}
+
+fn function_a() {
+    let a = 10;
+    let b = String::from("Raihan");
+    println!("{} {}", a, b)
+}
+
+fn function_b() {
+    let a = 20;
+    let b = String::from("Daniswara");
+    println!("{} {}", a, b)
+}
+
+#[test]
+fn string() {
+    let name: &str = "    Raihan Daniswara    ";
+    println!("my name is {}", name);
+
+    let trimmed_name: &str = name.trim();
+    println!("my trimmed name is {}", trimmed_name);
+
+    let mut username: &str = "Budi";
+    println!("{}", username);
+
+    username = "Tommy";
+    println!("{}", username)
+}
+
+#[test]
+fn string_type() {
+    let mut name: String = String::from("Raihan");
+    println!("{}", name);
+
+    name.push_str(" Daniswara");
+    println!("{}", name);
+
+    let replaced_name = name.replace("Raihan", "Kemas");
+    println!("{}", replaced_name);
+}
+
+#[test]
+fn ownership_rules() {
+    // a tidak bisa diakses disini, belum dideklarasikan
+    let a = 10; // a bisa diakses mulai disini
+
+    {
+        // b tidak bisa diakses disini, belum dideklarasikan
+        let b = 20; // b bisa diakses mulai disini
+        println!("{}", b);
+    } // scope b selesai, b dihapus, b tidak bisa diakses lagi
+
+    println!("{}", a);
+} // scope a selesai, a dihapus, a tidak bisa diakses lagi
+
+#[test]
+fn data_copy() {
+    let a = 10;
+    let b = a; // copy data dari a ke b
+
+    println!("{} {}", a, b)
+}
+
+#[test]
+fn ownership_movement() {
+    // move occurs because `name1` has type `String`, which does not implement the `Copy` trait
+    let name1: String = String::from("Raihan");
+    println!("{}", name1);
+
+    let name2: String = name1; // ownership pindah ke name2
+    println!("{}", name2);
+
+    // borrow of moved value: `name1`
+    // value borrowed here after move
+    // println!("{}", name1);
+}
+
+#[test]
+fn clone() {
+    // clone digunakan untuk copy isi data dari 1 variabel ke yang lain
+    // clone digunakan untuk tipe data yang tidak fixed (disimpan di heap)
+    let name1: String = String::from("Raihan");
+    let name2: String = name1.clone(); // membuat data tiruan yang isinya mengcopy dari data di variable name1
+
+    println!("{} {}", name1, name2);
+}
+
+#[test]
+fn if_expesion() {
+    let value = 3;
+    let result: &str = if value >= 8 {
+        "Good"
+    } else if value >= 6 {
+        "Not Bad"
+    } else if value >= 3 {
+        "Bad"
+    } else {
+        "Very Bad"
+    };
+
+    println!("Result = {}", result)
+}
+
+#[test]
+fn loop_expression() {
+    let mut counter = 0;
+    loop {
+        counter += 1;
+
+        if counter >= 10 {
+            break;
+        } else if counter % 2 == 0 {
+            continue;
+        }
+
+        println!("Counter = {}", counter)
+    }
+}
+
+#[test]
+fn loop_return_value() {
+    let mut counter = 0;
+    let result = loop {
+        counter += 1;
+
+        if counter > 10 {
+            break counter * 2;
+        }
+    };
+    println!("Result = {}", result)
+}
+
+#[test]
+fn loop_label() {
+    let mut number = 1;
+    'outer: loop {
+        let mut i = 1;
+
+        loop {
+            if number > 10 {
+                break 'outer;
+            }
+
+            println!("{} x {} = {}", number, i, number * i);
+
+            i += 1;
+
+            if i > 10 {
+                break;
+            }
+        }
+        number += 1;
+    }
+}
+
+#[test]
+fn while_loop() {
+    let mut counter = 0;
+    while counter <= 10 {
+        if counter % 2 == 0 {
+            println!("Counter = {}", counter);
+        }
+
+        counter += 1;
+    }
+}
+
+#[test]
+fn array_iteration_while_loop() {
+    let array: [&str; 5] = ["A", "B", "C", "D", "E"];
+    let mut index = 0;
+
+    while index < array.len() {
+        println!("Value = {}", array[index]);
+        index += 1;
+    }
+}
+
+#[test]
+fn array_iteration_for_loop() {
+    let array: [&str; 5] = ["A", "B", "C", "D", "E"];
+
+    for value in array {
+        println!("Value = {}", value)
+    }
+}
+
+#[test]
+fn range_exclude() {
+    let array: [&str; 5] = ["A", "B", "C", "D", "E"];
+    let range = 0..5;
+    println!("Range start = {}", range.start);
+    println!("Range end = {}", range.end);
+
+    for i in range {
+        println!("Array value = {}", array[i])
+    }
+}
+
+#[test]
+fn range_include() {
+    let array: [&str; 5] = ["A", "B", "C", "D", "E"];
+    let range = 0..=4;
+    println!("Range start = {}", range.start());
+    println!("Range end = {}", range.end());
+
+    for i in range {
+        println!("Array value = {}", array[i])
+    }
+}
+
+fn say_hello() {
+    println!("Hello!")
+}
+
+#[test]
+fn test_say_hello() {
+    say_hello();
+    say_hello();
+    say_hello();
+    say_hello();
+}
+
+fn say_goodbye(first_name: &str, last_name: &str) {
+    println!("Goodbye {} {}!", first_name, last_name)
+}
+
+fn factorial_loop(n: i32) -> i32 {
+    if n < 1 {
+        return 0;
+    }
+
+    let mut result = 1;
+
+    for i in 1..=n {
+        result *= i;
+    }
+
+    result
+}
+
+#[test]
+fn test_function() {
+    say_goodbye("Raihan", "Daniswara");
+    say_goodbye("Kayana", "Hafidz");
+    say_goodbye("Tommy", "Kemas");
+
+    let result = factorial_loop(5);
+    println!("Result = {}", result);
+
+    let result = factorial_loop(-10);
+    println!("Result = {}", result)
+}
+
+fn print_text(value: String, times: i32) {
+    if times <= 0 {
+        return;
+    } else {
+        println!("{}", value);
+    }
+
+    print_text(value, times - 1);
+}
+
+fn factorial_recursive(n: u32) -> u32 {
+    if n == 1 {
+        return 1;
+    }
+
+    return n * factorial_recursive(n - 1);
+}
+
+#[test]
+fn test_recursive() {
+    print_text(String::from("Raihan Daniswara"), 10);
+
+    let factorial_result = factorial_recursive(10);
+    println!("Factorial Result = {}", factorial_result)
+}
+
+fn print_number(number: i32) {
+    println!("number: {}", number)
+}
+
+fn hi(name: String) {
+    println!("Hi, {}", name)
+}
+
+fn full_name(first_name: String, last_name: String) -> (String, String, String) {
+    let full_name = format!("{} {}", first_name, last_name);
+
+    // kirim first_name dan juga last_name agar tetap bisa digunakan setelah berpindah ownership
+    (first_name, last_name, full_name)
+}
+
+#[test]
+fn test_function_ownership() {
+    let number = 10;
+    print_number(number);
+    // tetap bisa karena disimpan di stack
+    println!("Number = {}", number);
+
+    let name = String::from("Raihan Daniswara");
+    hi(name);
+    // borrow of moved value: name
+    // tidak bisa karena ownershipnya sudah berpindah ke name
+    // println!("Name = {}", name);
+
+    let first_name = String::from("Raihan");
+    let last_name = String::from("Daniswara");
+    let (first_name, last_name, full_name) = full_name(first_name, last_name);
+    println!("Full name = {}", full_name);
+    println!("First name = {}", first_name);
+    println!("Last name = {}", last_name);
+}
+
+fn full_name_reference(first_name: &String, last_name: &String) -> String {
+    format!("{} {}", first_name, last_name)
+}
+
+fn change_value(value: &String) {
+    // cannot borrow `*value` as mutable, as it is behind a `&` reference
+    // `value` is a `&` reference, so it cannot be borrowed as mutable
+    //
+    // Secara default data reference tidak bisa di ubah meskipun variabel aslinya mutable,
+    // karena function ini hanya meminjam data tersebut dan nanti akan dikembalikan lagi tanpa modifikasi
+    // value.push_str("Test");
+}
+
+fn change_value_mutable(value: &mut String) {
+    value.push_str("Test");
+}
+
+#[test]
+fn test_reference() {
+    let first_name = String::from("Raihan");
+    let last_name = String::from("Daniswara");
+    let full_name = full_name_reference(&first_name, &last_name);
+    println!("{}", full_name);
+    println!("{}", first_name);
+    println!("{}", last_name);
+
+    let mut value = String::from("Raihan");
+    change_value(&value);
+    println!("{}", value);
+
+    change_value_mutable(&mut value);
+    println!("{}", value);
+}
+
+#[test]
+fn slice_reference() {
+    let array: [i32; 10] = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+    let slice1: &[i32] = &array[..];
+    println!("{:?}", slice1);
+
+    let slice2: &[i32] = &array[0..5];
+    println!("{:?}", slice2);
+
+    let slice3: &[i32] = &array[5..];
+    println!("{:?}", slice3);
+}
+
+#[test]
+fn string_slice() {
+    let name = String::from("Raihan Daniswara");
+    let first_name: &str = &name[..6];
+    println!("First name = {}", first_name);
+
+    let last_name: &str = &name[7..];
+    println!("Last name = {}", last_name)
+}
+
+struct Person {
+    first_name: String,
+    last_name: String,
+    age: u8,
+}
+
+fn print_person(person: &Person) {
+    println!("First name = {}", person.first_name);
+    println!("Last name = {}", person.last_name);
+    println!("Age = {}", person.age);
+}
+
+#[test]
+fn struct_person() {
+    // bisa gunakan shorthand untuk pengisian data struct, tetapi harus sama nama variable nya dengan field struct nya
+    // ownership dari data first_name juga akan berpindah ke person, jadi sudah tidak bisa diakses melalui variable first_name
+    let first_name = String::from("Raihan");
+
+    let person: Person = Person {
+        age: 17,
+        first_name,
+        last_name: String::from("Daniswara"),
+    };
+
+    print_person(&person);
+    // borrow of moved value: first_name
+    // println!("First name = {}", first_name);
+
+    // hati hati, jika ada field di data person yang disimpan di heap, maka akan pindah ownership
+    // jadi sebaiknya gunakan .clone() khusus untuk di tipe data field yang disimpan di heap
+    let person2: Person = Person {
+        first_name: person.first_name.clone(),
+        last_name: person.last_name.clone(),
+        ..person
+    };
+    print_person(&person2);
+    println!("{}", person.first_name);
+    println!("{}", person.last_name);
+}
+
+struct GeoPoint(f64, f64);
+
+#[test]
+fn tuple_struct() {
+    let geo_point: GeoPoint = GeoPoint(-6.12353, 100.23453);
+    println!("Latitude = {}", geo_point.0);
+    println!("Longitude = {}", geo_point.1);
+}
+
+struct Nothing;
+
+#[test]
+fn no_field_struct() {
+    let _nothing1: Nothing = Nothing;
+    let _nothing2: Nothing = Nothing {};
 }
